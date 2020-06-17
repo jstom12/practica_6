@@ -17,13 +17,15 @@ int main()
     El archivo que se recibe tiene la siguiente estrucuta:
     POSICION EN X; POSICION EN Y; RADIO; MASA; VELOCIDAD INICIAL EN X; VELOCIDAD INICIAL EN Y
 
+    NOTESE QUE CADA VALOR ESTA SEPARADO POR UN ;
 
     */
     vector<cuerpo> cuerpos;
     ifstream archivo("datos.txt");
+    ofstream escritura("resultados.txt");
     if(!archivo.is_open())ofstream archivo("datos.txt");
     string linea;
-    int id=1;
+    int id=0,delta_t=1;
     while(getline(archivo,linea))
     {
         /*
@@ -44,6 +46,30 @@ int main()
         cuerpos.push_back(auxiliar_agregar_a_vector);
         id++;
     }
+    for(int j=0;j<101;j++)
+    {
+        for(int l=0;l<id+1;l++)
+        {
+            escritura << cuerpos[l].getPosx() <<"    "<< cuerpos[l].getPosy() << "    ";
+        }
+        escritura << endl;
+        vector<cuerpo>::iterator it;
+        it=cuerpos.begin();
+        while(it!=cuerpos.end())
+        {
+            for(int i=0;i<id+1;i++)
+            {
+                if(i!=it->getId())
+                {
+                    it->actualizar_velocidad(cuerpos[i].getPosx(),cuerpos[i].getPosy(),cuerpos[i].getMasa());
+                }
+            }
+            it->actualizar_posicion(1);
+            it++;
+        }
+    }
+    archivo.close();
+    escritura.close();
 
 
 }
